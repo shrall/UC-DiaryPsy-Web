@@ -1,7 +1,7 @@
 <template>
   <div
     id="loading-modal"
-    class="fixed items-center justify-center min-w-full min-h-screen"
+    class="admin-outer-modal"
     :class="isLoading ? 'flex' : 'hidden'"
   >
     <div
@@ -13,7 +13,7 @@
   </div>
   <div
     id="delete-modal"
-    class="fixed items-center justify-center min-w-full min-h-screen"
+    class="admin-outer-modal"
     :class="deleteClicked ? 'flex' : 'hidden'"
   >
     <div
@@ -193,7 +193,7 @@ export default {
       editToggled: false,
       tempModule: { name: null, id: null, status: null, color_hex: null },
       deleteClicked: false,
-      isLoading: false
+      isLoading: false,
     };
   },
   methods: {
