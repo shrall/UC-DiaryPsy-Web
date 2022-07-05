@@ -11,8 +11,8 @@
       rounded-r-3xl
     "
   >
-    <div class="text-xl font-bold mb-4">Hello, Anonymous</div>
-    <div class="text-xl font-bold">Questions</div>
+    <div class="text-heading mb-4">Halo, Anonymous</div>
+    <div class="text-heading">Pertanyaan</div>
     <div class="flex flex-col gap-y-2 ml-4 mb-4">
       <div
         @click="clickNav('module')"
@@ -22,7 +22,7 @@
           v-if="activeNav == 'module'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Module
+        Modul
       </div>
       <div
         @click="clickNav('character')"
@@ -32,7 +32,7 @@
           v-if="activeNav == 'character'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Character
+        Karakter
       </div>
       <div @click="clickNav('quiz')" class="cursor-pointer hover:text-gray-300">
         <span
@@ -49,7 +49,7 @@
           v-if="activeNav == 'question'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Question
+        Pertanyaan
       </div>
       <div
         @click="clickNav('quiztype')"
@@ -59,15 +59,12 @@
           v-if="activeNav == 'quiztype'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Quiz Type
+        Tipe Quiz
       </div>
     </div>
-    <div class="text-xl font-bold">Users</div>
+    <div class="text-heading">Users</div>
     <div class="flex flex-col gap-y-2 ml-4 mb-4">
-      <div
-        @click="clickNav('user')"
-        class="cursor-pointer hover:text-gray-300"
-      >
+      <div @click="clickNav('user')" class="cursor-pointer hover:text-gray-300">
         <span
           v-if="activeNav == 'user'"
           class="fa fa-fw fa-chevron-right"
@@ -82,14 +79,17 @@
           v-if="activeNav == 'tribe'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Tribe
+        Suku
       </div>
-      <div @click="clickNav('religion')" class="cursor-pointer hover:text-gray-300">
+      <div
+        @click="clickNav('religion')"
+        class="cursor-pointer hover:text-gray-300"
+      >
         <span
           v-if="activeNav == 'religion'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Religion
+        Agama
       </div>
       <div
         @click="clickNav('institute')"
@@ -99,17 +99,14 @@
           v-if="activeNav == 'institute'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Institute
+        Institusi
       </div>
-      <div
-        @click="clickNav('city')"
-        class="cursor-pointer hover:text-gray-300"
-      >
+      <div @click="clickNav('city')" class="cursor-pointer hover:text-gray-300">
         <span
           v-if="activeNav == 'city'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        City
+        Kota
       </div>
     </div>
   </div>
