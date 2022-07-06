@@ -1,16 +1,25 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "/src/views/auth/Login.vue";
-import Module from "/src/views/admin/Module.vue";
+import ModuleIndex from "/src/views/admin/Module/Index.vue";
+import UserIndex from "/src/views/admin/User/Index.vue";
 
 //Routes
 const routes = [
   {
     path: "/",
-    name: "Module",
-    component: Module,
+    name: "ModuleIndex",
+    component: ModuleIndex,
     meta: {
       title: "Module",
+    },
+  },
+  {
+    path: "/user",
+    name: "UserIndex",
+    component: UserIndex,
+    meta: {
+      title: "User",
     },
   },
   {
