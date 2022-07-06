@@ -4,6 +4,7 @@ import Login from "/src/views/auth/Login.vue";
 import ModuleIndex from "/src/views/admin/Module/Index.vue";
 import UserIndex from "/src/views/admin/User/Index.vue";
 import UserDetail from "/src/views/admin/User/Detail.vue";
+import UserCreate from "/src/views/admin/User/Create.vue";
 
 //Routes
 const routes = [
@@ -30,6 +31,14 @@ const routes = [
     props: true,
     meta: {
       title: "User Detail",
+    },
+  },
+  {
+    path: "/user/create",
+    name: "UserCreate",
+    component: UserCreate,
+    meta: {
+      title: "Create User",
     },
   },
   {

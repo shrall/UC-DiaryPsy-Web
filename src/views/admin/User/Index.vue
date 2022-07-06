@@ -16,8 +16,14 @@
       <Sidebar activeNav="user" />
     </div>
     <div class="col-span-10 p-4">
-      <div class="admin-card text-heading mb-8" @click="console.log('dor')">
-        {{ pageModel }}
+      <div class="admin-card mb-8 flex justify-between">
+        <div class="text-heading">{{ pageModel }}</div>
+        <router-link :to="{ name: 'UserCreate' }">
+          <div class="admin-button-green">
+            <span class="fa fa-fw fa-plus"></span>
+            Buat
+          </div></router-link
+        >
       </div>
       <div class="admin-card w-full h-vh-80">
         <ag-grid-vue
@@ -68,7 +74,7 @@ export default {
         {
           field: "action",
           cellRenderer: (params) => {
-            console.log(params.data)
+            console.log(params.data);
             return `
       <div class="flex items-center gap-2">
         <div class="admin-button-green">

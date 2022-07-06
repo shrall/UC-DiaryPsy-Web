@@ -8,6 +8,7 @@
       py-12
       text-light
       min-h-screen
+      h-full
       rounded-r-3xl
     "
   >
