@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "/src/views/auth/Login.vue";
 import ModuleIndex from "/src/views/admin/Module/Index.vue";
 import UserIndex from "/src/views/admin/User/Index.vue";
+import UserDetail from "/src/views/admin/User/Detail.vue";
 
 //Routes
 const routes = [
@@ -20,6 +21,15 @@ const routes = [
     component: UserIndex,
     meta: {
       title: "User",
+    },
+  },
+  {
+    path: "/user/:id",
+    name: "UserDetail",
+    component: UserDetail,
+    props: true,
+    meta: {
+      title: "User Detail",
     },
   },
   {

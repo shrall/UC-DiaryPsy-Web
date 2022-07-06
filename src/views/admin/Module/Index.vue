@@ -75,16 +75,7 @@
           >
             <template #item="{ element }">
               <div
-                class="
-                  list-group-item
-                  bg-kasih-200
-                  mb-2
-                  rounded-lg
-                  p-4
-                  flex
-                  gap-2
-                  items-center
-                "
+                class="list-group-item item-card"
                 :class="{ 'not-draggable': !enabled }"
               >
                 <span
