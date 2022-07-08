@@ -40,7 +40,7 @@
           <td>: {{ tempModule.color_hex }}</td>
         </tr>
       </table>
-      <div class="admin-button-red">
+      <div class="admin-button-red" @click="deleteModule">
         <span class="fa fa-fw fa-trash"></span>Hapus
       </div>
     </div>
@@ -67,7 +67,7 @@
             :list="modules"
             :disabled="!enabled"
             handle=".model-item-drag-handle"
-            item-key="id"
+            item-key="order"
             class="list-group"
             :move="checkMove"
             @start="dragging = true"
@@ -137,6 +137,7 @@
                   >Color Hex
                 </label>
                 <input
+                  placeholder="contoh: #FFFFFF"
                   type="text"
                   name="color_hex"
                   class="admin-input-kasih"
@@ -145,14 +146,21 @@
               </div>
             </form>
             <div class="flex">
-              <div
+              <button
+                @click="!tempModule.id ? createModule() : updateModule()"
+                type="submit"
+                :disabled="
+                  !tempModule.name ||
+                  !tempModule.status ||
+                  !tempModule.color_hex
+                "
                 class="font-bold text-lg"
                 :class="
                   !tempModule.id ? 'admin-button-green' : 'admin-button-blue'
                 "
               >
                 {{ !tempModule.id ? "Tambah" : "Simpan" }}
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -167,6 +175,7 @@ import Sidebar from "../components/Sidebar.vue";
 
 <script>
 import draggable from "vuedraggable";
+import axios from "axios";
 let id = 1;
 export default {
   components: {
@@ -176,31 +185,55 @@ export default {
     return {
       pageModel: "Modul",
       enabled: true,
-      modules: [
-        { name: "Kasih", id: 1, status: 1, color_hex: "#fffe00" },
-        { name: "Sukacita", id: 2, status: 1, color_hex: "#fffe00" },
-        { name: "Damai Sejahtera", id: 3, status: 0, color_hex: "#fffe00" },
-      ],
+      modules: [],
       editToggled: false,
-      tempModule: { name: null, id: null, status: null, color_hex: null },
+      tempModule: {
+        name: null,
+        id: null,
+        status: null,
+        order: null,
+        color_hex: null,
+      },
       deleteClicked: false,
       isLoading: false,
     };
   },
+  created() {
+    this.getAllModules();
+  },
   methods: {
+    resetModule: function () {
+      this.tempModule = {
+        name: null,
+        id: null,
+        status: null,
+        order: null,
+        color_hex: null,
+      };
+    },
     toggleEdit: function () {
       this.editToggled = !this.editToggled;
       if (!this.editToggled) {
-        this.tempModule = {
-          name: null,
-          id: null,
-          status: null,
-          color_hex: null,
-        };
+        this.resetModule();
       }
     },
     dragEnd: function (e) {
-      window.console.log(e.oldIndex);
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .post("admin/module/reorder", {
+          modules: this.modules,
+        })
+        .then((data) => {
+          this.isLoading = false;
+          this.getAllModules();
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     showEdit(id) {
       this.tempModule = this.modules.find((obj) => {
@@ -215,6 +248,86 @@ export default {
     },
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
+    },
+    getAllModules: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/admin/module")
+        .then((data) => {
+          console.log(data)
+          this.modules = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+              status: item.status,
+              order: item.order,
+              color_hex: item.color_hex,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    createModule() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .post("admin/module", {
+          name: this.tempModule.name,
+          status: this.tempModule.status,
+          color_hex: this.tempModule.color_hex,
+        })
+        .then((data) => {
+          this.isLoading = false;
+          this.getAllModules();
+          this.resetModule();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateModule() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .post("admin/module/" + this.tempModule.id, {
+          _method: "PATCH",
+          name: this.tempModule.name,
+          status: this.tempModule.status,
+          color_hex: this.tempModule.color_hex,
+        })
+        .then((data) => {
+          this.isLoading = false;
+          this.getAllModules();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    deleteModule() {
+      this.deleteClicked = false;
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .post("admin/module/" + this.tempModule.id, {
+          _method: "DELETE",
+        })
+        .then((data) => {
+          this.isLoading = false;
+          this.getAllModules();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

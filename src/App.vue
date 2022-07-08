@@ -5,6 +5,9 @@
 <script>
 export default {
   setup() {},
+  beforeMount() {
+    // this.checkLogin();
+  },
   watch: {
     $route(to) {
       document.title = `Diary - ${to.meta.title}`;
