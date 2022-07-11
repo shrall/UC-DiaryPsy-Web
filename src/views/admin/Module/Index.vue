@@ -74,30 +74,34 @@
             @end="dragEnd"
           >
             <template #item="{ element }">
-              <div
-                class="list-group-item item-card"
-                :class="{ 'not-draggable': !enabled }"
-              >
-                <span
-                  class="fa fa-fw fa-circle"
-                  :class="
-                    element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
-                  "
-                ></span>
-                {{ element.name }}
-                <div class="model-item-drag-handle p-1" v-if="!editToggled">
-                  <span class="fas fa-ellipsis-v"></span>
-                  <span class="fas fa-ellipsis-v"></span>
-                </div>
-                <div class="flex gap-2 ml-auto" v-else>
-                  <div @click="showEdit(element.id)">
-                    <span class="admin-button-blue fa fa-fw fa-edit"></span>
+              <router-link :to="{ path: `/module/${element.id}` }">
+                <div
+                  class="list-group-item item-card"
+                  :class="{ 'not-draggable': !enabled }"
+                >
+                  <span
+                    class="fa fa-fw fa-circle"
+                    :class="
+                      element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
+                    "
+                  ></span>
+                  {{ element.name }}
+                  <div class="model-item-drag-handle p-1" v-if="!editToggled">
+                    <span class="fas fa-ellipsis-v"></span>
+                    <span class="fas fa-ellipsis-v"></span>
                   </div>
-                  <div @click="showDelete(element.id)">
-                    <span class="admin-button-red fa fa-fw fa-trash-can"></span>
+                  <div class="flex gap-2 ml-auto" v-else>
+                    <div @click="showEdit(element.id)">
+                      <span class="admin-button-blue fa fa-fw fa-edit"></span>
+                    </div>
+                    <div @click="showDelete(element.id)">
+                      <span
+                        class="admin-button-red fa fa-fw fa-trash-can"
+                      ></span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </router-link>
             </template>
           </draggable>
         </div>
@@ -149,10 +153,7 @@
               <button
                 @click="!tempModule.id ? createModule() : updateModule()"
                 type="submit"
-                :disabled="
-                  !tempModule.name ||
-                  !tempModule.color_hex
-                "
+                :disabled="!tempModule.name || !tempModule.color_hex"
                 class="font-bold text-lg"
                 :class="
                   !tempModule.id ? 'admin-button-green' : 'admin-button-blue'

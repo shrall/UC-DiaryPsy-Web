@@ -160,11 +160,11 @@ import Sidebar from "../components/Sidebar.vue";
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
-let id = 1;
 export default {
   components: {
     draggable,
   },
+  props: ["id"],
   data() {
     return {
       pageModel: "Karakter",

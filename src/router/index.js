@@ -21,6 +21,7 @@ const routes = [
     path: "/module/:id",
     name: "ModuleDetail",
     component: ModuleDetail,
+    props: true,
     meta: {
       title: "Modul Detail",
     },
