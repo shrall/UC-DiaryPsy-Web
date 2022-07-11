@@ -46,7 +46,7 @@ import Sidebar from "../components/Sidebar.vue";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridVue } from "ag-grid-vue3";
-import { reactive, onMounted } from "vue";
+import { reactive } from "vue";
 export default {
   components: {
     AgGridVue,

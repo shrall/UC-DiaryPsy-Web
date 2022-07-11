@@ -29,28 +29,24 @@
       <table>
         <tr>
           <td>Nama</td>
-          <td>: {{ tempModule.name }}</td>
+          <td>: {{ tempCharacter.name }}</td>
         </tr>
         <tr>
           <td>Status</td>
-          <td>: {{ tempModule.status == "0" ? "Tidak Aktif" : "Aktif" }}</td>
-        </tr>
-        <tr>
-          <td>Color Hex</td>
-          <td>: {{ tempModule.color_hex }}</td>
+          <td>: {{ tempCharacter.status == "0" ? "Tidak Aktif" : "Aktif" }}</td>
         </tr>
       </table>
-      <div class="admin-button-red" @click="deleteModule">
+      <div class="admin-button-red" @click="deleteCharacter">
         <span class="fa fa-fw fa-trash"></span>Hapus
       </div>
     </div>
   </div>
   <div class="grid grid-cols-12 font-nunito bg-neutral-100">
     <div class="col-span-2">
-      <Sidebar activeNav="module" />
+      <Sidebar activeNav="character" />
     </div>
     <div class="col-span-10 p-4">
-      <div class="admin-card text-heading mb-8">{{ pageModel }}</div>
+      <div class="admin-card text-heading mb-8">Modul - {{ modelName }}</div>
       <div class="grid grid-cols-12 gap-x-4">
         <div class="col-span-4 admin-card">
           <div class="flex justify-between mb-4">
@@ -64,8 +60,8 @@
             </div>
           </div>
           <draggable
-            :key="modules"
-            :list="modules"
+            :key="characters"
+            :list="characters"
             :disabled="!enabled"
             handle=".model-item-drag-handle"
             item-key="order"
@@ -104,18 +100,20 @@
         <div class="col-span-8 admin-card">
           <div class="flex justify-between mb-4">
             <div class="text-heading">
-              {{ !tempModule.id ? "Tambah " + pageModel : "Edit " + pageModel }}
+              {{
+                !tempCharacter.id ? "Tambah " + pageModel : "Edit " + pageModel
+              }}
             </div>
           </div>
           <div class="flex flex-col gap-y-2">
-            <form id="create-module" method="post">
+            <form id="create-character" method="post">
               <div class="flex flex-col group">
                 <label for="name" class="admin-input-label-kasih">Name</label>
                 <input
                   type="text"
                   name="name"
                   class="admin-input-kasih"
-                  v-model="tempModule.name"
+                  v-model="tempCharacter.name"
                 />
               </div>
               <div class="flex flex-col group">
@@ -126,39 +124,26 @@
                   name="status"
                   id="status"
                   class="admin-input-kasih"
-                  v-model="tempModule.status"
+                  v-model="tempCharacter.status"
                 >
                   <option value="1">Aktif</option>
                   <option value="0">Tidak Aktif</option>
                 </select>
               </div>
-              <div class="flex flex-col group">
-                <label for="color" class="admin-input-label-kasih"
-                  >Color Hex
-                </label>
-                <input
-                  placeholder="contoh: #FFFFFF"
-                  type="text"
-                  name="color_hex"
-                  class="admin-input-kasih"
-                  v-model="tempModule.color_hex"
-                />
-              </div>
             </form>
             <div class="flex">
               <button
-                @click="!tempModule.id ? createModule() : updateModule()"
-                type="submit"
-                :disabled="
-                  !tempModule.name ||
-                  !tempModule.color_hex
+                @click="
+                  !tempCharacter.id ? createCharacter() : updateCharacter()
                 "
+                type="submit"
+                :disabled="!tempCharacter.name"
                 class="font-bold text-lg"
                 :class="
-                  !tempModule.id ? 'admin-button-green' : 'admin-button-blue'
+                  !tempCharacter.id ? 'admin-button-green' : 'admin-button-blue'
                 "
               >
-                {{ !tempModule.id ? "Tambah" : "Simpan" }}
+                {{ !tempCharacter.id ? "Tambah" : "Simpan" }}
               </button>
             </div>
           </div>
@@ -182,38 +167,39 @@ export default {
   },
   data() {
     return {
-      pageModel: "Modul",
+      pageModel: "Karakter",
       enabled: true,
-      modules: [],
+      modelName: null,
+      characters: [],
       editToggled: false,
-      tempModule: {
-        name: null,
+      tempCharacter: {
         id: null,
+        name: null,
         status: null,
         order: null,
-        color_hex: null,
+        module_id: null,
       },
       deleteClicked: false,
       isLoading: false,
     };
   },
   created() {
-    this.getAllModules();
+    this.getModuleDetail();
   },
   methods: {
-    resetModule: function () {
-      this.tempModule = {
-        name: null,
+    resetCharacter: function () {
+      this.tempCharacter = {
         id: null,
+        name: null,
         status: null,
         order: null,
-        color_hex: null,
+        module_id: null,
       };
     },
     toggleEdit: function () {
       this.editToggled = !this.editToggled;
       if (!this.editToggled) {
-        this.resetModule();
+        this.resetCharacter();
       }
     },
     dragEnd: function (e) {
@@ -222,42 +208,43 @@ export default {
         baseURL: this.url,
       });
       instance
-        .post("admin/module/reorder", {
-          modules: this.modules,
+        .post("admin/character/reorder", {
+          characters: this.characters,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
+          this.getModuleDetail();
         })
         .catch((err) => {
           console.log(err);
         });
     },
     showEdit(id) {
-      this.tempModule = this.modules.find((obj) => {
+      this.tempCharacter = this.characters.find((obj) => {
         return obj.id === id;
       });
     },
     showDelete(id) {
       this.deleteClicked = true;
-      this.tempModule = this.modules.find((obj) => {
+      this.tempCharacter = this.characters.find((obj) => {
         return obj.id === id;
       });
     },
-    getAllModules: function () {
+    getModuleDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .get("/admin/module")
+        .get("/admin/module/" + this.id)
         .then((data) => {
-          this.modules = data.data.data.results.map((item) => {
+          this.modelName = data.data.data.results.name;
+          this.characters = data.data.data.results.characters.map((item) => {
             return {
               id: item.id,
               name: item.name,
               status: item.status,
               order: item.order,
-              color_hex: item.color_hex,
+              module_id: item.module_id,
             };
           });
         })
@@ -265,59 +252,58 @@ export default {
           console.log(err);
         });
     },
-    createModule() {
+    createCharacter() {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/module", {
-          name: this.tempModule.name,
-          status: this.tempModule.status,
-          color_hex: this.tempModule.color_hex,
+        .post("admin/character", {
+          name: this.tempCharacter.name,
+          status: this.tempCharacter.status,
+          module_id: this.id,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
-          this.resetModule();
+          this.getModuleDetail();
+          this.resetCharacter();
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    updateModule() {
+    updateCharacter() {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/module/" + this.tempModule.id, {
+        .post("admin/character/" + this.tempCharacter.id, {
           _method: "PATCH",
-          name: this.tempModule.name,
-          status: this.tempModule.status,
-          color_hex: this.tempModule.color_hex,
+          name: this.tempCharacter.name,
+          status: this.tempCharacter.status,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
+          this.getModuleDetail();
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    deleteModule() {
+    deleteCharacter() {
       this.deleteClicked = false;
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/module/" + this.tempModule.id, {
+        .post("admin/character/" + this.tempCharacter.id, {
           _method: "DELETE",
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
+          this.getModuleDetail();
         })
         .catch((err) => {
           console.log(err);
