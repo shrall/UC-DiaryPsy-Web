@@ -56,7 +56,7 @@
               @click="toggleEdit"
             >
               <span class="fa fa-fw fa-edit"></span>
-              Toggle
+              Edit
             </div>
           </div>
           <draggable
@@ -74,13 +74,15 @@
                 class="list-group-item item-card"
                 :class="{ 'not-draggable': !enabled }"
               >
-                <span
-                  class="fa fa-fw fa-circle"
-                  :class="
-                    element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
-                  "
-                ></span>
-                {{ element.name }}
+                  <span
+                    class="fa fa-fw fa-circle"
+                    :class="
+                      element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
+                    "
+                  ></span>
+                <router-link :to="{ path: `/character/${element.id}` }" class="hover:text-blue-500">
+                  {{ element.name }}
+                </router-link>
                 <div class="model-item-drag-handle p-1" v-if="!editToggled">
                   <span class="fas fa-ellipsis-v"></span>
                   <span class="fas fa-ellipsis-v"></span>
@@ -126,7 +128,7 @@
                   class="admin-input-kasih"
                   v-model="tempCharacter.status"
                 >
-                  <option value="1">Aktif</option>
+                  <option value="1" selected>Aktif</option>
                   <option value="0">Tidak Aktif</option>
                 </select>
               </div>
@@ -137,7 +139,7 @@
                   !tempCharacter.id ? createCharacter() : updateCharacter()
                 "
                 type="submit"
-                :disabled="!tempCharacter.name"
+                :disabled="!tempCharacter.name || tempCharacter.status == null"
                 class="font-bold text-lg"
                 :class="
                   !tempCharacter.id ? 'admin-button-green' : 'admin-button-blue'
@@ -223,6 +225,7 @@ export default {
       this.tempCharacter = this.characters.find((obj) => {
         return obj.id === id;
       });
+      console.log(this.tempCharacter);
     },
     showDelete(id) {
       this.deleteClicked = true;
@@ -304,6 +307,7 @@ export default {
         .then((data) => {
           this.isLoading = false;
           this.getModuleDetail();
+          this.resetCharacter();
         })
         .catch((err) => {
           console.log(err);

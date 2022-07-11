@@ -29,28 +29,24 @@
       <table>
         <tr>
           <td>Nama</td>
-          <td>: {{ tempModule.name }}</td>
+          <td>: {{ tempQuiz.name }}</td>
         </tr>
         <tr>
           <td>Status</td>
-          <td>: {{ tempModule.status == "0" ? "Tidak Aktif" : "Aktif" }}</td>
-        </tr>
-        <tr>
-          <td>Color Hex</td>
-          <td>: {{ tempModule.color_hex }}</td>
+          <td>: {{ tempQuiz.status == "0" ? "Tidak Aktif" : "Aktif" }}</td>
         </tr>
       </table>
-      <div class="admin-button-red" @click="deleteModule">
+      <div class="admin-button-red" @click="deleteQuiz">
         <span class="fa fa-fw fa-trash"></span>Hapus
       </div>
     </div>
   </div>
   <div class="grid grid-cols-12 font-nunito bg-neutral-100">
     <div class="col-span-2">
-      <Sidebar activeNav="module" />
+      <Sidebar activeNav="quiz" />
     </div>
     <div class="col-span-10 p-4">
-      <div class="admin-card text-heading mb-8">{{ pageModel }}</div>
+      <div class="admin-card text-heading mb-8">Karakter - {{ modelName }}</div>
       <div class="grid grid-cols-12 gap-x-4">
         <div class="col-span-4 admin-card">
           <div class="flex justify-between mb-4">
@@ -64,8 +60,8 @@
             </div>
           </div>
           <draggable
-            :key="modules"
-            :list="modules"
+            :key="quizzes"
+            :list="quizzes"
             :disabled="!enabled"
             handle=".model-item-drag-handle"
             item-key="order"
@@ -84,12 +80,7 @@
                     element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
                   "
                 ></span>
-                <router-link
-                  :to="{ path: `/module/${element.id}` }"
-                  class="hover:text-blue-500"
-                >
-                  {{ element.name }}
-                </router-link>
+                {{ element.name }}
                 <div class="model-item-drag-handle p-1" v-if="!editToggled">
                   <span class="fas fa-ellipsis-v"></span>
                   <span class="fas fa-ellipsis-v"></span>
@@ -109,18 +100,20 @@
         <div class="col-span-8 admin-card">
           <div class="flex justify-between mb-4">
             <div class="text-heading">
-              {{ !tempModule.id ? "Tambah " + pageModel : "Edit " + pageModel }}
+              {{
+                !tempQuiz.id ? "Tambah " + pageModel : "Edit " + pageModel
+              }}
             </div>
           </div>
           <div class="flex flex-col gap-y-2">
-            <form id="create-module" method="post">
+            <form id="create-quiz" method="post">
               <div class="flex flex-col group">
                 <label for="name" class="admin-input-label-kasih">Name</label>
                 <input
                   type="text"
                   name="name"
                   class="admin-input-kasih"
-                  v-model="tempModule.name"
+                  v-model="tempQuiz.name"
                 />
               </div>
               <div class="flex flex-col group">
@@ -131,40 +124,26 @@
                   name="status"
                   id="status"
                   class="admin-input-kasih"
-                  v-model="tempModule.status"
+                  v-model="tempQuiz.status"
                 >
                   <option value="1" selected>Aktif</option>
                   <option value="0">Tidak Aktif</option>
                 </select>
               </div>
-              <div class="flex flex-col group">
-                <label for="color" class="admin-input-label-kasih"
-                  >Color Hex
-                </label>
-                <input
-                  placeholder="contoh: #FFFFFF"
-                  type="text"
-                  name="color_hex"
-                  class="admin-input-kasih"
-                  v-model="tempModule.color_hex"
-                />
-              </div>
             </form>
             <div class="flex">
               <button
-                @click="!tempModule.id ? createModule() : updateModule()"
-                type="submit"
-                :disabled="
-                  !tempModule.name ||
-                  !tempModule.color_hex ||
-                  tempModule.status == null
+                @click="
+                  !tempQuiz.id ? createQuiz() : updateQuiz()
                 "
+                type="submit"
+                :disabled="!tempQuiz.name || tempQuiz.status == null"
                 class="font-bold text-lg"
                 :class="
-                  !tempModule.id ? 'admin-button-green' : 'admin-button-blue'
+                  !tempQuiz.id ? 'admin-button-green' : 'admin-button-blue'
                 "
               >
-                {{ !tempModule.id ? "Tambah" : "Simpan" }}
+                {{ !tempQuiz.id ? "Tambah" : "Simpan" }}
               </button>
             </div>
           </div>
@@ -181,45 +160,46 @@ import Sidebar from "../components/Sidebar.vue";
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
-let id = 1;
 export default {
   components: {
     draggable,
   },
+  props: ["id"],
   data() {
     return {
-      pageModel: "Modul",
+      pageModel: "Quiz",
       enabled: true,
-      modules: [],
+      modelName: null,
+      quizzes: [],
       editToggled: false,
-      tempModule: {
-        name: null,
+      tempQuiz: {
         id: null,
+        name: null,
         status: null,
         order: null,
-        color_hex: null,
+        character_id: null,
       },
       deleteClicked: false,
       isLoading: false,
     };
   },
   created() {
-    this.getAllModules();
+    this.getKaraktereDetail();
   },
   methods: {
-    resetModule: function () {
-      this.tempModule = {
-        name: null,
+    resetQuiz: function () {
+      this.tempQuiz = {
         id: null,
+        name: null,
         status: null,
         order: null,
-        color_hex: null,
+        character_id: null,
       };
     },
     toggleEdit: function () {
       this.editToggled = !this.editToggled;
       if (!this.editToggled) {
-        this.resetModule();
+        this.resetQuiz();
       }
     },
     dragEnd: function (e) {
@@ -228,42 +208,43 @@ export default {
         baseURL: this.url,
       });
       instance
-        .post("admin/module/reorder", {
-          modules: this.modules,
+        .post("admin/quiz/reorder", {
+          quizzes: this.quizzes,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
+          this.getKaraktereDetail();
         })
         .catch((err) => {
           console.log(err);
         });
     },
     showEdit(id) {
-      this.tempModule = this.modules.find((obj) => {
+      this.tempQuiz = this.quizzes.find((obj) => {
         return obj.id === id;
       });
     },
     showDelete(id) {
       this.deleteClicked = true;
-      this.tempModule = this.modules.find((obj) => {
+      this.tempQuiz = this.quizzes.find((obj) => {
         return obj.id === id;
       });
     },
-    getAllModules: function () {
+    getKaraktereDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .get("/admin/module")
+        .get("/admin/character/" + this.id)
         .then((data) => {
-          this.modules = data.data.data.results.map((item) => {
+          this.modelName = data.data.data.results.name;
+          this.quizzes = data.data.data.results.quizzes.map((item) => {
             return {
               id: item.id,
               name: item.name,
               status: item.status,
               order: item.order,
-              color_hex: item.color_hex,
+              character_id: item.character_id,
             };
           });
         })
@@ -271,60 +252,59 @@ export default {
           console.log(err);
         });
     },
-    createModule() {
+    createQuiz() {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/module", {
-          name: this.tempModule.name,
-          status: this.tempModule.status,
-          color_hex: this.tempModule.color_hex,
+        .post("admin/quiz", {
+          name: this.tempQuiz.name,
+          status: this.tempQuiz.status,
+          character_id: this.id,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
-          this.resetModule();
+          this.getKaraktereDetail();
+          this.resetQuiz();
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    updateModule() {
+    updateQuiz() {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/module/" + this.tempModule.id, {
+        .post("admin/quiz/" + this.tempQuiz.id, {
           _method: "PATCH",
-          name: this.tempModule.name,
-          status: this.tempModule.status,
-          color_hex: this.tempModule.color_hex,
+          name: this.tempQuiz.name,
+          status: this.tempQuiz.status,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
+          this.getKaraktereDetail();
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    deleteModule() {
+    deleteQuiz() {
       this.deleteClicked = false;
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/module/" + this.tempModule.id, {
+        .post("admin/quiz/" + this.tempQuiz.id, {
           _method: "DELETE",
         })
         .then((data) => {
           this.isLoading = false;
-          this.getAllModules();
-          this.resetModule();
+          this.getKaraktereDetail();
+          this.toggleEdit();
         })
         .catch((err) => {
           console.log(err);

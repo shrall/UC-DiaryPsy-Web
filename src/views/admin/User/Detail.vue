@@ -110,7 +110,7 @@
                 @click="toggleEdit"
               >
                 <span class="fa fa-fw fa-edit"></span>
-                Toggle
+                Edit
               </div>
               <select class="admin-button-green">
                 <option>Tambah Modul</option>
