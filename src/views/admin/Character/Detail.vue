@@ -80,7 +80,9 @@
                     element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
                   "
                 ></span>
-                {{ element.name }}
+                <router-link :to="{ path: `/quiz/${element.id}` }" class="hover:text-blue-500">
+                  {{ element.name }}
+                </router-link>
                 <div class="model-item-drag-handle p-1" v-if="!editToggled">
                   <span class="fas fa-ellipsis-v"></span>
                   <span class="fas fa-ellipsis-v"></span>
@@ -101,14 +103,14 @@
           <div class="flex justify-between mb-4">
             <div class="text-heading">
               {{
-                !tempQuiz.id ? "Tambah " + pageModel : "Edit " + pageModel
+                !tempQuiz.id ? "Tambah Quiz" : "Edit Quiz"
               }}
             </div>
           </div>
           <div class="flex flex-col gap-y-2">
             <form id="create-quiz" method="post">
               <div class="flex flex-col group">
-                <label for="name" class="admin-input-label-kasih">Name</label>
+                <label for="name" class="admin-input-label-kasih">Nama</label>
                 <input
                   type="text"
                   name="name"
@@ -184,7 +186,7 @@ export default {
     };
   },
   created() {
-    this.getKaraktereDetail();
+    this.getKarakterDetail();
   },
   methods: {
     resetQuiz: function () {
@@ -213,7 +215,7 @@ export default {
         })
         .then((data) => {
           this.isLoading = false;
-          this.getKaraktereDetail();
+          this.getKarakterDetail();
         })
         .catch((err) => {
           console.log(err);
@@ -230,7 +232,7 @@ export default {
         return obj.id === id;
       });
     },
-    getKaraktereDetail: function () {
+    getKarakterDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
       });
@@ -265,7 +267,7 @@ export default {
         })
         .then((data) => {
           this.isLoading = false;
-          this.getKaraktereDetail();
+          this.getKarakterDetail();
           this.resetQuiz();
         })
         .catch((err) => {
@@ -285,7 +287,7 @@ export default {
         })
         .then((data) => {
           this.isLoading = false;
-          this.getKaraktereDetail();
+          this.getKarakterDetail();
         })
         .catch((err) => {
           console.log(err);
@@ -303,7 +305,7 @@ export default {
         })
         .then((data) => {
           this.isLoading = false;
-          this.getKaraktereDetail();
+          this.getKarakterDetail();
           this.toggleEdit();
         })
         .catch((err) => {

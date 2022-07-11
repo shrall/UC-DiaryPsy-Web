@@ -109,13 +109,13 @@
         <div class="col-span-8 admin-card">
           <div class="flex justify-between mb-4">
             <div class="text-heading">
-              {{ !tempModule.id ? "Tambah " + pageModel : "Edit " + pageModel }}
+              {{ !tempModule.id ? "Tambah Modul" : "Edit Modul" }}
             </div>
           </div>
           <div class="flex flex-col gap-y-2">
             <form id="create-module" method="post">
               <div class="flex flex-col group">
-                <label for="name" class="admin-input-label-kasih">Name</label>
+                <label for="name" class="admin-input-label-kasih">Nama</label>
                 <input
                   type="text"
                   name="name"

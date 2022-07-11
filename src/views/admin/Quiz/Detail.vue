@@ -29,28 +29,28 @@
       <table>
         <tr>
           <td>Nama</td>
-          <td>: {{ tempCharacter.name }}</td>
+          <td>: {{ tempQuestion.question }}</td>
         </tr>
         <tr>
-          <td>Status</td>
-          <td>: {{ tempCharacter.status == "0" ? "Tidak Aktif" : "Aktif" }}</td>
+          <td>Tipe</td>
+          <td>: {{ tempQuestion.questiontype.name }}</td>
         </tr>
       </table>
-      <div class="admin-button-red" @click="deleteCharacter">
+      <div class="admin-button-red" @click="deleteQuestion">
         <span class="fa fa-fw fa-trash"></span>Hapus
       </div>
     </div>
   </div>
   <div class="grid grid-cols-12 font-nunito bg-neutral-100">
     <div class="col-span-2">
-      <Sidebar activeNav="character" />
+      <Sidebar activeNav="question" />
     </div>
     <div class="col-span-10 p-4">
-      <div class="admin-card text-heading mb-8">Modul - {{ modelName }}</div>
+      <div class="admin-card text-heading mb-8">Quiz - {{ modelName }}</div>
       <div class="grid grid-cols-12 gap-x-4">
         <div class="col-span-4 admin-card">
           <div class="flex justify-between mb-4">
-            <div class="text-heading">Urutan {{ pageModel }}</div>
+            <div class="text-heading">Urutan pertanyaan</div>
             <div
               :class="editToggled ? 'admin-button-blue' : 'admin-button-white'"
               @click="toggleEdit"
@@ -60,8 +60,8 @@
             </div>
           </div>
           <draggable
-            :key="characters"
-            :list="characters"
+            :key="questions"
+            :list="questions"
             :disabled="!enabled"
             handle=".model-item-drag-handle"
             item-key="order"
@@ -74,15 +74,13 @@
                 class="list-group-item item-card"
                 :class="{ 'not-draggable': !enabled }"
               >
-                  <span
-                    class="fa fa-fw fa-circle"
-                    :class="
-                      element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
-                    "
-                  ></span>
-                <router-link :to="{ path: `/character/${element.id}` }" class="hover:text-blue-500">
-                  {{ element.name }}
-                </router-link>
+                <div class="text-2xl font-bold">{{ element.order }}</div>
+                <div v-if="element.questiontype_id == 1">
+                  {{ element.question }}
+                </div>
+                <div v-else>
+                  {{element.questiontype.name}}
+                </div>
                 <div class="model-item-drag-handle p-1" v-if="!editToggled">
                   <span class="fas fa-ellipsis-v"></span>
                   <span class="fas fa-ellipsis-v"></span>
@@ -102,50 +100,56 @@
         <div class="col-span-8 admin-card">
           <div class="flex justify-between mb-4">
             <div class="text-heading">
-              {{
-                !tempCharacter.id ? "Tambah Karakter" : "Edit Karakter"
-              }}
+              {{ !tempQuestion.id ? "Tambah Pertanyaan" : "Edit Pertanyaan" }}
             </div>
           </div>
           <div class="flex flex-col gap-y-2">
-            <form id="create-character" method="post">
+            <form id="create-quiz" method="post">
               <div class="flex flex-col group">
-                <label for="name" class="admin-input-label-kasih">Nama</label>
-                <input
-                  type="text"
-                  name="name"
-                  class="admin-input-kasih"
-                  v-model="tempCharacter.name"
-                />
-              </div>
-              <div class="flex flex-col group">
-                <label for="status" class="admin-input-label-kasih"
-                  >Status
+                <label for="questiontype_id" class="admin-input-label-kasih">
+                  Tipe
                 </label>
                 <select
-                  name="status"
-                  id="status"
+                  name="questiontype_id"
+                  id="questiontype_id"
                   class="admin-input-kasih"
-                  v-model="tempCharacter.status"
+                  v-model="tempQuestion.questiontype_id"
                 >
-                  <option value="1" selected>Aktif</option>
-                  <option value="0">Tidak Aktif</option>
+                  <option
+                    v-for="questiontype in questiontypes"
+                    :key="questiontype"
+                    :value="questiontype.id"
+                  >
+                    {{ questiontype.name }}
+                  </option>
                 </select>
+              </div>
+              <div
+                class="flex flex-col group"
+                v-if="tempQuestion.questiontype_id == 1"
+              >
+                <label for="question" class="admin-input-label-kasih"
+                  >Pertanyaan
+                </label>
+                <textarea
+                  type="text"
+                  name="question"
+                  class="admin-input-kasih"
+                  v-model="tempQuestion.question"
+                ></textarea>
               </div>
             </form>
             <div class="flex">
               <button
-                @click="
-                  !tempCharacter.id ? createCharacter() : updateCharacter()
-                "
+                @click="!tempQuestion.id ? createQuestion() : updateQuestion()"
                 type="submit"
-                :disabled="!tempCharacter.name || tempCharacter.status == null"
+                :disabled="tempQuestion.questiontype_id == null"
                 class="font-bold text-lg"
                 :class="
-                  !tempCharacter.id ? 'admin-button-green' : 'admin-button-blue'
+                  !tempQuestion.id ? 'admin-button-green' : 'admin-button-blue'
                 "
               >
-                {{ !tempCharacter.id ? "Tambah" : "Simpan" }}
+                {{ !tempQuestion.id ? "Tambah" : "Simpan" }}
               </button>
             </div>
           </div>
@@ -169,39 +173,51 @@ export default {
   props: ["id"],
   data() {
     return {
-      pageModel: "Karakter",
+      pageModel: "Question",
       enabled: true,
       modelName: null,
-      characters: [],
+      questions: [],
+      questiontypes: [],
       editToggled: false,
-      tempCharacter: {
+      tempQuestion: {
         id: null,
-        name: null,
+        question: null,
         status: null,
         order: null,
-        module_id: null,
+        quiz_id: this.id,
+        questiontype_id: null,
+        questiontype: {
+          id: null,
+          name: null,
+        },
       },
       deleteClicked: false,
       isLoading: false,
     };
   },
   created() {
-    this.getModuleDetail();
+    this.getQuizDetail();
+    this.getAllQuestionTypes();
   },
   methods: {
-    resetCharacter: function () {
-      this.tempCharacter = {
+    resetQuestion: function () {
+      this.tempQuestion = {
         id: null,
-        name: null,
+        question: null,
         status: null,
         order: null,
-        module_id: null,
+        quiz_id: this.id,
+        questiontype_id: null,
+        questiontype: {
+          id: null,
+          name: null,
+        },
       };
     },
     toggleEdit: function () {
       this.editToggled = !this.editToggled;
       if (!this.editToggled) {
-        this.resetCharacter();
+        this.resetQuestion();
       }
     },
     dragEnd: function (e) {
@@ -210,44 +226,44 @@ export default {
         baseURL: this.url,
       });
       instance
-        .post("admin/character/reorder", {
-          characters: this.characters,
+        .post("admin/question/reorder", {
+          questions: this.questions,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getModuleDetail();
+          this.getQuizDetail();
         })
         .catch((err) => {
           console.log(err);
         });
     },
     showEdit(id) {
-      this.tempCharacter = this.characters.find((obj) => {
+      this.tempQuestion = this.questions.find((obj) => {
         return obj.id === id;
       });
-      console.log(this.tempCharacter);
     },
     showDelete(id) {
       this.deleteClicked = true;
-      this.tempCharacter = this.characters.find((obj) => {
+      this.tempQuestion = this.questions.find((obj) => {
         return obj.id === id;
       });
     },
-    getModuleDetail: function () {
+    getQuizDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .get("/admin/module/" + this.id)
+        .get("/admin/quiz/" + this.id)
         .then((data) => {
           this.modelName = data.data.data.results.name;
-          this.characters = data.data.data.results.characters.map((item) => {
+          this.questions = data.data.data.results.questions.map((item) => {
             return {
               id: item.id,
-              name: item.name,
-              status: item.status,
+              question: item.question,
               order: item.order,
-              module_id: item.module_id,
+              quiz_id: item.quiz_id,
+              questiontype_id: item.questiontype_id,
+              questiontype: item.questiontype,
             };
           });
         })
@@ -255,59 +271,76 @@ export default {
           console.log(err);
         });
     },
-    createCharacter() {
-      this.isLoading = true;
+    getAllQuestionTypes: function () {
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/character", {
-          name: this.tempCharacter.name,
-          status: this.tempCharacter.status,
-          module_id: this.id,
-        })
+        .get("/admin/questiontype")
         .then((data) => {
-          this.isLoading = false;
-          this.getModuleDetail();
-          this.resetCharacter();
+          this.questiontypes = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+            };
+          });
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    updateCharacter() {
+    createQuestion() {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/character/" + this.tempCharacter.id, {
+        .post("admin/question", {
+          question: this.tempQuestion.question,
+          quiz_id: this.tempQuestion.quiz_id,
+          questiontype_id: this.tempQuestion.questiontype_id,
+        })
+        .then((data) => {
+          this.isLoading = false;
+          this.getQuizDetail();
+          this.resetQuestion();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateQuestion() {
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .post("admin/question/" + this.tempQuestion.id, {
           _method: "PATCH",
-          name: this.tempCharacter.name,
-          status: this.tempCharacter.status,
+          question: this.tempQuestion.question,
         })
         .then((data) => {
           this.isLoading = false;
-          this.getModuleDetail();
+          this.getQuizDetail();
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    deleteCharacter() {
+    deleteQuestion() {
       this.deleteClicked = false;
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
       });
       instance
-        .post("admin/character/" + this.tempCharacter.id, {
+        .post("admin/question/" + this.tempQuestion.id, {
           _method: "DELETE",
         })
         .then((data) => {
           this.isLoading = false;
-          this.getModuleDetail();
-          this.resetCharacter();
+          this.getQuizDetail();
+          this.toggleEdit();
         })
         .catch((err) => {
           console.log(err);

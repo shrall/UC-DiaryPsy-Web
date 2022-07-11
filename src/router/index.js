@@ -4,6 +4,7 @@ import Login from "/src/views/auth/Login.vue";
 import ModuleIndex from "/src/views/admin/Module/Index.vue";
 import ModuleDetail from "/src/views/admin/Module/Detail.vue";
 import CharacterDetail from "/src/views/admin/Character/Detail.vue";
+import QuizDetail from "/src/views/admin/Quiz/Detail.vue";
 import UserIndex from "/src/views/admin/User/Index.vue";
 import UserDetail from "/src/views/admin/User/Detail.vue";
 import UserCreate from "/src/views/admin/User/Create.vue";
@@ -31,6 +32,15 @@ const routes = [
     path: "/character/:id",
     name: "CharacterDetail",
     component: CharacterDetail,
+    props: true,
+    meta: {
+      title: "Karakter Detail",
+    },
+  },
+  {
+    path: "/quiz/:id",
+    name: "QuizDetail",
+    component: QuizDetail,
     props: true,
     meta: {
       title: "Karakter Detail",
