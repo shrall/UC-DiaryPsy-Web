@@ -27,13 +27,15 @@
     </div>
     <div class="text-heading">Users</div>
     <div class="flex flex-col gap-y-2 ml-4 mb-4">
-      <div @click="clickNav('user')" class="cursor-pointer hover:text-gray-300">
-        <span
-          v-if="activeNav == 'user'"
-          class="fa fa-fw fa-chevron-right"
-        ></span>
-        User
-      </div>
+      <router-link :to="{ name: 'UserIndex' }">
+        <div class="cursor-pointer hover:text-gray-300">
+          <span
+            v-if="activeNav == 'user'"
+            class="fa fa-fw fa-chevron-right"
+          ></span>
+          User
+        </div>
+      </router-link>
       <div
         @click="clickNav('tribe')"
         class="cursor-pointer hover:text-gray-300"

@@ -22,8 +22,8 @@
           <div class="admin-button-green">
             <span class="fa fa-fw fa-plus"></span>
             Buat
-          </div></router-link
-        >
+          </div>
+        </router-link>
       </div>
       <div class="admin-card w-full h-vh-80">
         <ag-grid-vue
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import Sidebar from "../components/Sidebar.vue";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -55,34 +56,30 @@ export default {
   setup() {
     const users = reactive({
       value: [
-        {
-          id: 1,
-          name: "kurnin",
-          email: "korni@gmail.com",
-        },
-        {
-          id: 2,
-          name: "monica",
-          email: "monica@gmail.com",
-        },
       ],
     });
     const columnDefs = reactive({
       value: [
+        { field: "id" },
         { field: "name" },
         { field: "email" },
         {
           field: "action",
           cellRenderer: (params) => {
-            console.log(params.data);
             return `
       <div class="flex items-center gap-2">
+                <a href="/user/${params.data.id}"
+                >
         <div class="admin-button-green">
           <span class="fa fa-fw fa-eye"></span>
         </div>
+        </a>
+                <a href="/user/edit/${params.data.id}"
+                >
         <div class="admin-button-blue">
           <span class="fa fa-fw fa-edit"></span>
         </div>
+        </a>
       </div>`;
           },
         },
@@ -106,6 +103,30 @@ export default {
       isLoading: false,
     };
   },
-  methods: {},
+  methods: {
+    getAllUsers: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/admin/user")
+        .then((data) => {
+          this.isLoading = false;
+          this.users.value = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+              email: item.email,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  created() {
+    this.getAllUsers();
+  },
 };
 </script>

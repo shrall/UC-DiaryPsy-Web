@@ -8,6 +8,7 @@ import QuizDetail from "/src/views/admin/Quiz/Detail.vue";
 import UserIndex from "/src/views/admin/User/Index.vue";
 import UserDetail from "/src/views/admin/User/Detail.vue";
 import UserCreate from "/src/views/admin/User/Create.vue";
+import UserEdit from "/src/views/admin/User/Edit.vue";
 
 //Routes
 const routes = [
@@ -69,6 +70,15 @@ const routes = [
     component: UserCreate,
     meta: {
       title: "Buat User",
+    },
+  },
+  {
+    path: "/user/edit/:id",
+    name: "UserEdit",
+    component: UserEdit,
+    props: true,
+    meta: {
+      title: "User Edit",
     },
   },
   {
