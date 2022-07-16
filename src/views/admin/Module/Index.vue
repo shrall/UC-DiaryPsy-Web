@@ -55,13 +55,13 @@
         <div class="col-span-4 admin-card">
           <div class="flex justify-between mb-4">
             <div class="text-heading">Urutan {{ pageModel }}</div>
-            <div
+            <!-- <div
               :class="editToggled ? 'admin-button-blue' : 'admin-button-white'"
               @click="toggleEdit"
             >
               <span class="fa fa-fw fa-edit"></span>
               Edit
-            </div>
+            </div> -->
           </div>
           <draggable
             :key="modules"
@@ -109,7 +109,8 @@
         <div class="col-span-8 admin-card">
           <div class="flex justify-between mb-4">
             <div class="text-heading">
-              {{ !tempModule.id ? "Tambah Modul" : "Edit Modul" }}
+              <!-- {{ !tempModule.id ? "Tambah Modul" : "Edit Modul" }} -->
+              Edit Modul
             </div>
           </div>
           <div class="flex flex-col gap-y-2">
@@ -159,12 +160,10 @@
                   !tempModule.color_hex ||
                   tempModule.status == null
                 "
-                class="font-bold text-lg"
-                :class="
-                  !tempModule.id ? 'admin-button-green' : 'admin-button-blue'
-                "
+                class="font-bold text-lg admin-button-blue"
               >
-                {{ !tempModule.id ? "Tambah" : "Simpan" }}
+                <!-- {{ !tempModule.id ? "Tambah" : "Simpan" }} -->
+                Simpan
               </button>
             </div>
           </div>
@@ -191,7 +190,7 @@ export default {
       pageModel: "Modul",
       enabled: true,
       modules: [],
-      editToggled: false,
+      editToggled: true,
       tempModule: {
         name: null,
         id: null,
