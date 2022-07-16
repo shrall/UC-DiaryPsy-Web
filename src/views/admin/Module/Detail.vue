@@ -182,7 +182,7 @@ export default {
         module_id: null,
       },
       deleteClicked: false,
-      isLoading: false,
+      isLoading: true,
     };
   },
   created() {
@@ -240,6 +240,7 @@ export default {
       instance
         .get("/admin/module/" + this.id)
         .then((data) => {
+          this.isLoading = false;
           this.modelName = data.data.data.results.name;
           this.characters = data.data.data.results.characters.map((item) => {
             return {

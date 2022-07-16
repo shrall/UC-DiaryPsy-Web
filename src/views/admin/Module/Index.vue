@@ -199,7 +199,7 @@ export default {
         color_hex: null,
       },
       deleteClicked: false,
-      isLoading: false,
+      isLoading: true,
     };
   },
   created() {
@@ -256,6 +256,7 @@ export default {
       instance
         .get("/admin/module")
         .then((data) => {
+          this.isLoading = false;
           this.modules = data.data.data.results.map((item) => {
             return {
               id: item.id,

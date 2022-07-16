@@ -182,7 +182,7 @@ export default {
         character_id: null,
       },
       deleteClicked: false,
-      isLoading: false,
+      isLoading: true,
     };
   },
   created() {
@@ -239,6 +239,7 @@ export default {
       instance
         .get("/admin/character/" + this.id)
         .then((data) => {
+          this.isLoading = false;
           this.modelName = data.data.data.results.name;
           this.quizzes = data.data.data.results.quizzes.map((item) => {
             return {

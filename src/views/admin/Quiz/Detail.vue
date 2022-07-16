@@ -192,7 +192,7 @@ export default {
         },
       },
       deleteClicked: false,
-      isLoading: false,
+      isLoading: true,
     };
   },
   created() {
@@ -255,6 +255,7 @@ export default {
       instance
         .get("/admin/quiz/" + this.id)
         .then((data) => {
+          this.isLoading = false;
           this.modelName = data.data.data.results.name;
           this.questions = data.data.data.results.questions.map((item) => {
             return {
