@@ -105,7 +105,7 @@
           </div>
           <div class="flex flex-col gap-y-2">
             <form id="create-quiz" method="post">
-              <div class="flex flex-col group">
+              <!-- <div class="flex flex-col group">
                 <label for="questiontype_id" class="admin-input-label-kasih">
                   Tipe
                 </label>
@@ -123,10 +123,9 @@
                     {{ questiontype.name }}
                   </option>
                 </select>
-              </div>
+              </div> -->
               <div
                 class="flex flex-col group"
-                v-if="tempQuestion.questiontype_id == 1"
               >
                 <label for="question" class="admin-input-label-kasih"
                   >Pertanyaan
@@ -185,7 +184,7 @@ export default {
         status: null,
         order: null,
         quiz_id: this.id,
-        questiontype_id: null,
+        questiontype_id: 1,
         questiontype: {
           id: null,
           name: null,
@@ -207,7 +206,7 @@ export default {
         status: null,
         order: null,
         quiz_id: this.id,
-        questiontype_id: null,
+        questiontype_id: 1,
         questiontype: {
           id: null,
           name: null,
