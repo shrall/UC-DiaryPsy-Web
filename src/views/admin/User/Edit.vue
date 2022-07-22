@@ -22,7 +22,7 @@
           <div class="flex items-center gap-2">
             <img
               id="user-photo"
-              :src="tempUser.photo"
+              :src="this.files_url + tempUser.photo_name"
               class="rounded-full w-24 h-24"
             />
             <div class="flex flex-col gap-1">
@@ -51,34 +51,15 @@
             />
           </div>
           <div class="flex flex-col group">
-            <label for="email" class="admin-input-label-kasih">E-Mail</label>
-            <input
-              type="email"
-              name="email"
-              class="admin-input-kasih"
-              v-model="tempUser.email"
-            />
-          </div>
-          <div class="flex flex-col group">
             <label for="password" class="admin-input-label-kasih">
-              Password
+              Password Baru
             </label>
             <input
+              placeholder="Kosongkan saja apabila tidak akan dirubah"
               type="password"
               name="password"
               class="admin-input-kasih"
               v-model="tempUser.password"
-            />
-          </div>
-          <div class="flex flex-col group">
-            <label for="password_confirmation" class="admin-input-label-kasih">
-              Password Confirmation
-            </label>
-            <input
-              type="password"
-              name="password_confirmation"
-              class="admin-input-kasih"
-              v-model="tempUser.password_confirmation"
             />
           </div>
           <div class="flex flex-col group">
@@ -113,14 +94,38 @@
             />
           </div>
           <div class="flex flex-col group">
+            <label for="education" class="admin-input-label-kasih">
+              Pendidikan
+            </label>
+            <select
+              name="education"
+              id="education"
+              class="admin-input-kasih"
+              v-model="tempUser.education_id"
+            >
+              <option
+                v-for="education in educations"
+                :key="education.id"
+                :value="education.id"
+              >
+                {{ education.name }}
+              </option>
+            </select>
+          </div>
+          <div class="flex flex-col group">
             <label for="institute" class="admin-input-label-kasih">
               Institusi
             </label>
-            <select name="institute" id="institute" class="admin-input-kasih">
+            <select
+              name="institute"
+              id="institute"
+              class="admin-input-kasih"
+              v-model="tempUser.institute_id"
+            >
               <option
                 v-for="institute in institutes"
                 :key="institute.id"
-                value="{{institute.id}}"
+                :value="institute.id"
               >
                 {{ institute.name }}
               </option>
@@ -130,11 +135,16 @@
             <label for="religion" class="admin-input-label-kasih">
               Agama
             </label>
-            <select name="religion" id="religion" class="admin-input-kasih">
+            <select
+              name="religion"
+              id="religion"
+              class="admin-input-kasih"
+              v-model="tempUser.religion_id"
+            >
               <option
                 v-for="religion in religions"
                 :key="religion.id"
-                value="{{religion.id}}"
+                :value="religion.id"
               >
                 {{ religion.name }}
               </option>
@@ -142,28 +152,32 @@
           </div>
           <div class="flex flex-col group">
             <label for="tribe" class="admin-input-label-kasih"> Suku </label>
-            <select name="tribe" id="tribe" class="admin-input-kasih">
-              <option
-                v-for="tribe in tribes"
-                :key="tribe.id"
-                value="{{tribe.id}}"
-              >
+            <select
+              name="tribe"
+              id="tribe"
+              class="admin-input-kasih"
+              v-model="tempUser.tribe_id"
+            >
+              <option v-for="tribe in tribes" :key="tribe.id" :value="tribe.id">
                 {{ tribe.name }}
               </option>
             </select>
           </div>
           <div class="flex flex-col group">
-            <label for="city" class="admin-input-label-kasih">
-              Institusi
-            </label>
-            <select name="city" id="city" class="admin-input-kasih">
-              <option v-for="city in cities" :key="city.id" value="{{city.id}}">
+            <label for="city" class="admin-input-label-kasih"> Kota </label>
+            <select
+              name="city"
+              id="city"
+              class="admin-input-kasih"
+              v-model="tempUser.city_id"
+            >
+              <option v-for="city in cities" :key="city.id" :value="city.id">
                 {{ city.name }}
               </option>
             </select>
           </div>
           <div class="flex items-center justify-end">
-            <div class="admin-button-green">Submit</div>
+            <div class="admin-button-green" @click="updateUser()">Submit</div>
           </div>
         </div>
       </form>
@@ -176,8 +190,10 @@ import Sidebar from "../components/Sidebar.vue";
 </script>
 
 <script>
+import axios from "axios";
 export default {
   components: {},
+  props: ["id"],
   data() {
     return {
       pageModel: "User",
@@ -185,75 +201,191 @@ export default {
         name: null,
         email: null,
         password: null,
-        password_confirmation: null,
         year_born: null,
         phone: null,
         photo: null,
+        photo_file: null,
         photo_name: null,
         address: null,
         institute_id: 1,
         religion_id: 1,
         tribe_id: 1,
-        city_id: 1,
-        role_id: 1,
+        city_id: 1101,
+        education_id: 1,
       },
-      institutes: [
-        {
-          id: 1,
-          name: "SCB",
-        },
-        {
-          id: 2,
-          name: "St.Louis",
-        },
-      ],
-      religions: [
-        {
-          id: 1,
-          name: "Katolik",
-        },
-        {
-          id: 2,
-          name: "Kristen",
-        },
-      ],
-      tribes: [
-        {
-          id: 1,
-          name: "Dayak",
-        },
-        {
-          id: 2,
-          name: "Tionghoa",
-        },
-      ],
-      cities: [
-        {
-          id: 1,
-          name: "Surabaya",
-        },
-        {
-          id: 2,
-          name: "Jakarta",
-        },
-      ],
-      roles: [
-        {
-          id: 1,
-          name: "User",
-        },
-        {
-          id: 2,
-          name: "Admin",
-        },
-      ],
-      isLoading: false,
+      educations: [],
+      institutes: [],
+      religions: [],
+      tribes: [],
+      cities: [],
+      isLoading: true,
     };
   },
+  created() {
+    this.getAllEducations();
+    this.getAllReligions();
+    this.getAllInstitutes();
+    this.getAllTribes();
+    this.getAllCities();
+    this.getUserDetail();
+  },
   methods: {
+    getUserDetail: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/admin/user/" + this.id)
+        .then((data) => {
+          this.isLoading = false;
+          this.tempUser.name = data.data.data.results.name;
+          this.tempUser.email = data.data.data.results.email;
+          this.tempUser.year_born = data.data.data.results.year_born;
+          this.tempUser.phone = data.data.data.results.phone;
+          this.tempUser.address = data.data.data.results.address;
+          this.tempUser.photo_name = data.data.data.results.photo;
+          this.tempUser.education_id = data.data.data.results.education.id;
+          this.tempUser.institute_id = data.data.data.results.institute.id;
+          this.tempUser.religion_id = data.data.data.results.religion.id;
+          this.tempUser.tribe_id = data.data.data.results.tribe.id;
+          this.tempUser.city_id = data.data.data.results.city.id;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateUser() {
+      const formData = new FormData();
+      formData.append("name", this.tempUser.name);
+      if (this.tempUser.password) {
+        formData.append("password", this.tempUser.password);
+      }
+      formData.append("year_born", this.tempUser.year_born);
+      formData.append("phone", this.tempUser.phone);
+      if (this.tempUser.photo) {
+        formData.append("photo", this.tempUser.photo);
+      }
+      formData.append("address", this.tempUser.address);
+      formData.append("institute_id", this.tempUser.institute_id);
+      formData.append("religion_id", this.tempUser.religion_id);
+      formData.append("tribe_id", this.tempUser.tribe_id);
+      formData.append("city_id", this.tempUser.city_id);
+      formData.append("education_id", this.tempUser.education_id);
+      formData.append("_method", "PATCH");
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .post("admin/user/" + this.id, formData)
+        .then((data) => {
+          this.isLoading = false;
+          this.$router.push("/user");
+        })
+        .catch((err) => {
+          console.log(err);
+          this.isLoading = false;
+        });
+    },
+    getAllCities: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/location/city")
+        .then((data) => {
+          this.isLoading = false;
+          this.cities = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllTribes: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/admin/tribe")
+        .then((data) => {
+          this.isLoading = false;
+          this.tribes = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllInstitutes: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/admin/institute")
+        .then((data) => {
+          this.isLoading = false;
+          this.institutes = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllReligions: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/admin/religion")
+        .then((data) => {
+          this.isLoading = false;
+          this.religions = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getAllEducations: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+      });
+      instance
+        .get("/admin/education")
+        .then((data) => {
+          this.isLoading = false;
+          this.educations = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     onFileChange(e) {
       const file = e.target.files[0];
-      this.tempUser.photo = URL.createObjectURL(file);
+      this.tempUser.photo_file = URL.createObjectURL(file);
+      this.tempUser.photo = this.$refs.file.files[0];
       this.tempUser.photo_name = file.name;
     },
   },

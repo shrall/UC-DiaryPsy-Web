@@ -17,4 +17,5 @@ app.mixin({
   },
 });
 app.config.globalProperties.url = "http://uc-diarypsy.test/api/";
+app.config.globalProperties.files_url = "http://uc-diarypsy.test/uploads/";
 app.mount("#app");
