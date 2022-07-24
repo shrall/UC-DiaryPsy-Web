@@ -18,6 +18,9 @@ import ReligionEdit from "/src/views/admin/Religion/Edit.vue";
 import InstituteIndex from "/src/views/admin/Institute/Index.vue";
 import InstituteCreate from "/src/views/admin/Institute/Create.vue";
 import InstituteEdit from "/src/views/admin/Institute/Edit.vue";
+import EducationIndex from "/src/views/admin/Education/Index.vue";
+import EducationCreate from "/src/views/admin/Education/Create.vue";
+import EducationEdit from "/src/views/admin/Education/Edit.vue";
 
 //Routes
 const routes = [
@@ -163,6 +166,31 @@ const routes = [
     props: true,
     meta: {
       title: "Edit Institute",
+    },
+  },
+  {
+    path: "/education",
+    name: "EducationIndex",
+    component: EducationIndex,
+    meta: {
+      title: "Education",
+    },
+  },
+  {
+    path: "/education/create",
+    name: "EducationCreate",
+    component: EducationCreate,
+    meta: {
+      title: "Buat Education",
+    },
+  },
+  {
+    path: "/education/edit/:id",
+    name: "EducationEdit",
+    component: EducationEdit,
+    props: true,
+    meta: {
+      title: "Edit Education",
     },
   },
   {

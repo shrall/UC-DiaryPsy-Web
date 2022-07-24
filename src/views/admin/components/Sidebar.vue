@@ -55,21 +55,23 @@
         </div>
       </router-link>
       <router-link :to="{ name: 'InstituteIndex' }">
-      <div class="cursor-pointer hover:text-gray-300">
-        <span
-          v-if="activeNav == 'institute'"
-          class="fa fa-fw fa-chevron-right"
-        ></span>
-        Institusi
-      </div>
+        <div class="cursor-pointer hover:text-gray-300">
+          <span
+            v-if="activeNav == 'institute'"
+            class="fa fa-fw fa-chevron-right"
+          ></span>
+          Institusi
+        </div>
       </router-link>
-      <div class="cursor-pointer hover:text-gray-300">
-        <span
-          v-if="activeNav == 'education'"
-          class="fa fa-fw fa-chevron-right"
-        ></span>
-        Pendidikan
-      </div>
+      <router-link :to="{ name: 'EducationIndex' }">
+        <div class="cursor-pointer hover:text-gray-300">
+          <span
+            v-if="activeNav == 'education'"
+            class="fa fa-fw fa-chevron-right"
+          ></span>
+          Pendidikan
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
