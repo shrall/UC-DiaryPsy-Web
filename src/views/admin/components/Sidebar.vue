@@ -54,6 +54,7 @@
           Agama
         </div>
       </router-link>
+      <router-link :to="{ name: 'InstituteIndex' }">
       <div class="cursor-pointer hover:text-gray-300">
         <span
           v-if="activeNav == 'institute'"
@@ -61,6 +62,7 @@
         ></span>
         Institusi
       </div>
+      </router-link>
       <div class="cursor-pointer hover:text-gray-300">
         <span
           v-if="activeNav == 'education'"
