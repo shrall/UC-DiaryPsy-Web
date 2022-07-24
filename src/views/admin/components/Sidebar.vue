@@ -45,27 +45,23 @@
           Suku
         </div>
       </router-link>
-      <div
-        @click="clickNav('religion')"
-        class="cursor-pointer hover:text-gray-300"
-      >
-        <span
-          v-if="activeNav == 'religion'"
-          class="fa fa-fw fa-chevron-right"
-        ></span>
-        Agama
-      </div>
-      <div
-        @click="clickNav('institute')"
-        class="cursor-pointer hover:text-gray-300"
-      >
+      <router-link :to="{ name: 'ReligionIndex' }">
+        <div class="cursor-pointer hover:text-gray-300">
+          <span
+            v-if="activeNav == 'religion'"
+            class="fa fa-fw fa-chevron-right"
+          ></span>
+          Agama
+        </div>
+      </router-link>
+      <div class="cursor-pointer hover:text-gray-300">
         <span
           v-if="activeNav == 'institute'"
           class="fa fa-fw fa-chevron-right"
         ></span>
         Institusi
       </div>
-      <div @click="clickNav('education')" class="cursor-pointer hover:text-gray-300">
+      <div class="cursor-pointer hover:text-gray-300">
         <span
           v-if="activeNav == 'education'"
           class="fa fa-fw fa-chevron-right"

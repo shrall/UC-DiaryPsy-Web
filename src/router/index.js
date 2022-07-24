@@ -12,6 +12,9 @@ import UserEdit from "/src/views/admin/User/Edit.vue";
 import TribeIndex from "/src/views/admin/Tribe/Index.vue";
 import TribeCreate from "/src/views/admin/Tribe/Create.vue";
 import TribeEdit from "/src/views/admin/Tribe/Edit.vue";
+import ReligionIndex from "/src/views/admin/Religion/Index.vue";
+import ReligionCreate from "/src/views/admin/Religion/Create.vue";
+import ReligionEdit from "/src/views/admin/Religion/Edit.vue";
 
 //Routes
 const routes = [
@@ -107,6 +110,31 @@ const routes = [
     props: true,
     meta: {
       title: "User Tribe",
+    },
+  },
+  {
+    path: "/religion",
+    name: "ReligionIndex",
+    component: ReligionIndex,
+    meta: {
+      title: "Religion",
+    },
+  },
+  {
+    path: "/religion/create",
+    name: "ReligionCreate",
+    component: ReligionCreate,
+    meta: {
+      title: "Buat Religion",
+    },
+  },
+  {
+    path: "/religion/edit/:id",
+    name: "ReligionEdit",
+    component: ReligionEdit,
+    props: true,
+    meta: {
+      title: "User Religion",
     },
   },
   {
