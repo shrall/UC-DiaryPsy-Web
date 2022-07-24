@@ -9,6 +9,9 @@ import UserIndex from "/src/views/admin/User/Index.vue";
 import UserDetail from "/src/views/admin/User/Detail.vue";
 import UserCreate from "/src/views/admin/User/Create.vue";
 import UserEdit from "/src/views/admin/User/Edit.vue";
+import TribeIndex from "/src/views/admin/Tribe/Index.vue";
+import TribeCreate from "/src/views/admin/Tribe/Create.vue";
+import TribeEdit from "/src/views/admin/Tribe/Edit.vue";
 
 //Routes
 const routes = [
@@ -79,6 +82,31 @@ const routes = [
     props: true,
     meta: {
       title: "User Edit",
+    },
+  },
+  {
+    path: "/tribe",
+    name: "TribeIndex",
+    component: TribeIndex,
+    meta: {
+      title: "Tribe",
+    },
+  },
+  {
+    path: "/tribe/create",
+    name: "TribeCreate",
+    component: TribeCreate,
+    meta: {
+      title: "Buat Tribe",
+    },
+  },
+  {
+    path: "/tribe/edit/:id",
+    name: "TribeEdit",
+    component: TribeEdit,
+    props: true,
+    meta: {
+      title: "User Tribe",
     },
   },
   {

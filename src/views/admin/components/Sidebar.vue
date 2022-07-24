@@ -36,16 +36,15 @@
           User
         </div>
       </router-link>
-      <div
-        @click="clickNav('tribe')"
-        class="cursor-pointer hover:text-gray-300"
-      >
-        <span
-          v-if="activeNav == 'tribe'"
-          class="fa fa-fw fa-chevron-right"
-        ></span>
-        Suku
-      </div>
+      <router-link :to="{ name: 'TribeIndex' }">
+        <div class="cursor-pointer hover:text-gray-300">
+          <span
+            v-if="activeNav == 'tribe'"
+            class="fa fa-fw fa-chevron-right"
+          ></span>
+          Suku
+        </div>
+      </router-link>
       <div
         @click="clickNav('religion')"
         class="cursor-pointer hover:text-gray-300"
@@ -66,12 +65,12 @@
         ></span>
         Institusi
       </div>
-      <div @click="clickNav('city')" class="cursor-pointer hover:text-gray-300">
+      <div @click="clickNav('education')" class="cursor-pointer hover:text-gray-300">
         <span
-          v-if="activeNav == 'city'"
+          v-if="activeNav == 'education'"
           class="fa fa-fw fa-chevron-right"
         ></span>
-        Kota
+        Pendidikan
       </div>
     </div>
   </div>
