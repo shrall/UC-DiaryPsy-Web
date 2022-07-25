@@ -233,6 +233,7 @@ export default {
     getUserDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/user/" + this.id)
@@ -275,6 +276,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .post("admin/user/" + this.id, formData)
@@ -290,6 +292,7 @@ export default {
     getAllCities: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/location/city")
@@ -309,6 +312,7 @@ export default {
     getAllTribes: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/tribe")
@@ -328,6 +332,7 @@ export default {
     getAllInstitutes: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/institute")
@@ -347,6 +352,7 @@ export default {
     getAllReligions: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/religion")
@@ -366,6 +372,7 @@ export default {
     getAllEducations: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/education")

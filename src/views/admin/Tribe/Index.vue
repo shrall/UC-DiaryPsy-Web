@@ -133,6 +133,7 @@ export default {
     getAllTribes: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/tribe")
@@ -160,6 +161,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .post("admin/tribe/" + this.tempTribe.id, {

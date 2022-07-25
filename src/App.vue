@@ -6,7 +6,7 @@
 export default {
   setup() {},
   beforeMount() {
-    // this.checkLogin();
+    this.checkLogin();
   },
   watch: {
     $route(to) {

@@ -50,6 +50,7 @@ export default {
     getEducationDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/education/" + this.id)
@@ -68,6 +69,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .post("admin/education/" + this.id, formData)

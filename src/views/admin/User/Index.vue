@@ -107,6 +107,7 @@ export default {
     getAllUsers: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/user")

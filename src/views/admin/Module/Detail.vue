@@ -208,6 +208,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .post("admin/character/reorder", {
@@ -236,6 +237,7 @@ export default {
     getModuleDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .get("/admin/module/" + this.id)
@@ -260,6 +262,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .post("admin/character", {
@@ -280,6 +283,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .post("admin/character/" + this.tempCharacter.id, {
@@ -300,6 +304,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
+        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
       });
       instance
         .post("admin/character/" + this.tempCharacter.id, {

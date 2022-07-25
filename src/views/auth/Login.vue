@@ -47,6 +47,7 @@
 
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -59,6 +60,21 @@ export default {
     submitLogin: function () {
       if (this.userEmail && this.userPassword) {
         this.isSubmitted = true;
+        let self = this;
+        axios
+          .post(this.url + "login", {
+            email: this.userEmail,
+            password: this.userPassword,
+          })
+          .then((data) => {
+            localStorage["access_token"] = data.data.data.results.access_token;
+            localStorage["user_id"] = data.data.data.results.user_id;
+            localStorage["role_id"] = data.data.data.results.role_id;
+            self.$router.push("/");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
         alert("E-Mail / Password belum di isi!");
       }
