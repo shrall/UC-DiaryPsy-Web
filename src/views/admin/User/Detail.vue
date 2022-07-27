@@ -11,27 +11,6 @@
       <span class="fa fa-circle-notch"></span>
     </div>
   </div>
-  <div
-    id="delete-modal"
-    class="admin-outer-modal"
-    :class="deleteClicked ? 'flex' : 'hidden'"
-  >
-    <div
-      class="bg-black opacity-50 absolute -z-10 min-w-full min-h-screen"
-    ></div>
-    <div class="admin-modal">
-      <div @click="deleteClicked = false">
-        <span class="fa fa-fw fa-times admin-close-modal-button"></span>
-      </div>
-      <div class="text-2xl">
-        Apakah kamu yakin ingin menghapus modul
-        <span class="font-bold">{{ tempModule.name }}</span> dari user ini?
-      </div>
-      <div class="admin-button-red">
-        <span class="fa fa-fw fa-trash"></span>Hapus
-      </div>
-    </div>
-  </div>
   <div class="grid grid-cols-12 font-nunito bg-neutral-100">
     <div class="col-span-2">
       <Sidebar activeNav="user" />
@@ -42,63 +21,70 @@
         <div class="col-span-3 flex flex-col gap-y-2">
           <div class="admin-card flex flex-col items-center">
             <img
-              src="https://images.unsplash.com/photo-1508185159346-bb1c5e93ebb4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=55cf14db6ed80a0410e229368963e9d8&auto=format&fit=crop&w=1900&q=80"
+              :src="this.files_url + tempUser.photo"
               class="rounded-full w-36 h-36"
             />
-            <div class="text-heading">User Name</div>
-            <div class="text-subheading">email@user.com</div>
+            <div class="text-heading">{{ tempUser.name }}</div>
+            <div class="text-subheading">{{ tempUser.email }}</div>
           </div>
           <div class="admin-card">
             <div class="text-heading">Action</div>
-            <div class="flex items-center gap-2">
-              <div class="admin-button-blue">
+            <div class="grid grid-cols-2 justify-center items-center gap-2">
+              <div class="admin-button-black col-span-2">
+                <span class="fa fa-fw fa-file-export"></span>
+                Export PDF
+              </div>
+              <router-link
+                :to="{ path: `/user/edit/${this.id}` }"
+                class="admin-button-blue col-span-2"
+              >
                 <span class="fa fa-fw fa-edit"></span>
                 Edit
-              </div>
-              <div class="admin-button-red">
+              </router-link>
+              <!-- <div class="admin-button-red">
                 <span class="fa fa-fw fa-trash"></span>
                 Hapus
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
-        <div class="col-span-6 admin-card">
+        <div class="col-span-9 admin-card">
           <div class="text-heading mb-4">Personal Detail</div>
           <div class="grid grid-cols-2 gap-y-2">
             <div class="flex flex-col">
               <div class="text-caption">Telepon</div>
-              <div class="text-xl">01882138</div>
+              <div class="text-xl">{{ tempUser.phone }}</div>
             </div>
             <div class="flex flex-col">
               <div class="text-caption">Alamat</div>
-              <div class="text-xl">Jl. Mawar 123</div>
+              <div class="text-xl">{{ tempUser.address }}</div>
             </div>
             <div class="flex flex-col">
               <div class="text-caption">Institusi</div>
-              <div class="text-xl">Universitas ABC</div>
+              <div class="text-xl">{{ tempUser.institute }}</div>
             </div>
             <div class="flex flex-col">
               <div class="text-caption">Kota</div>
-              <div class="text-xl">Surabaya</div>
+              <div class="text-xl">{{ tempUser.city }}</div>
             </div>
             <div class="flex flex-col">
               <div class="text-caption">Agama</div>
-              <div class="text-xl">Kristen</div>
+              <div class="text-xl">{{ tempUser.religion }}</div>
             </div>
             <div class="flex flex-col">
               <div class="text-caption">Suku</div>
-              <div class="text-xl">Tionghoa</div>
+              <div class="text-xl">{{ tempUser.tribe }}</div>
             </div>
             <div class="flex flex-col">
               <div class="text-caption">Tahun Lahir</div>
-              <div class="text-xl">2001</div>
+              <div class="text-xl">{{ tempUser.year_born }}</div>
             </div>
           </div>
         </div>
-        <div class="col-span-3 admin-card">
+        <!-- <div class="col-span-3 admin-card">
           <div class="text-heading mb-2">Completed Module</div>
           <div class="item-card">Kasih</div>
-        </div>
+        </div> -->
         <div class="col-span-12 admin-card">
           <div class="flex justify-between mb-2">
             <div class="text-heading">Modul Yang Dimiliki</div>
@@ -112,23 +98,29 @@
                 <span class="fa fa-fw fa-edit"></span>
                 Edit
               </div>
-              <select class="admin-button-green">
+              <select class="admin-button-green" @change="addModule($event)">
                 <option>Tambah Modul</option>
-                <option value="1">Kasih</option>
+                <option
+                  v-for="module in modules"
+                  :key="module.id"
+                  :value="module.id"
+                >
+                  {{ module.name }}
+                </option>
               </select>
             </div>
           </div>
           <div class="grid grid-cols-4 gap-2">
             <div
               class="item-card justify-between"
-              v-for="module in modules"
-              :key="module.id"
+              v-for="data in tempUser.modules"
+              :key="data.module.id"
             >
-              {{ module.name }}
+              {{ data.module.name }}
               <div
                 class="admin-button-red"
                 v-if="editToggled"
-                @click="showDelete(module.id)"
+                @click="deleteModule(data.id)"
               >
                 <span class="fa fa-fw fa-trash"></span>
               </div>
@@ -145,21 +137,26 @@ import Sidebar from "../components/Sidebar.vue";
 </script>
 
 <script>
+import axios from "axios";
 export default {
   components: {},
   props: ["id"],
-  created() {
-    console.log(this.id);
-  },
   data() {
     return {
-      modules: [
-        { name: "Kasih", id: 1, status: 1, color_hex: "#fffe00" },
-        { name: "Sukacita", id: 2, status: 1, color_hex: "#fffe00" },
-        { name: "Damai Sejahtera", id: 3, status: 0, color_hex: "#fffe00" },
-        { name: "Kesabaran", id: 4, status: 0, color_hex: "#fffe00" },
-        { name: "Kemurahan", id: 5, status: 0, color_hex: "#fffe00" },
-      ],
+      tempUser: {
+        name: null,
+        email: null,
+        year_born: null,
+        phone: null,
+        photo: null,
+        address: null,
+        institute: null,
+        city: null,
+        religion: null,
+        tribe: null,
+        modules: [],
+      },
+      modules: [],
       editToggled: false,
       pageModel: "User",
       isLoading: false,
@@ -167,7 +164,74 @@ export default {
       tempModule: { name: null, id: null, status: null, color_hex: null },
     };
   },
+  created() {
+    this.getUserDetail();
+    this.getAllModules();
+  },
   methods: {
+    addModule: function (event) {
+      const formData = new FormData();
+      formData.append("module_id", event.target.value);
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/user/${this.id}/module/add`, formData)
+        .then((data) => {
+          this.getUserDetail();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.isLoading = false;
+        });
+    },
+    deleteModule: function (id) {
+      console.log(id);
+      const formData = new FormData();
+      formData.append("usermodule_id", id);
+      this.isLoading = true;
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .post(`admin/user/${this.id}/module/delete`, formData)
+        .then((data) => {
+          this.getUserDetail();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.isLoading = false;
+        });
+    },
+    getUserDetail: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/user/" + this.id)
+        .then((data) => {
+          this.isLoading = false;
+          this.tempUser.name = data.data.data.results.name;
+          this.tempUser.email = data.data.data.results.email;
+          this.tempUser.phone = data.data.data.results.phone;
+          this.tempUser.photo = data.data.data.results.photo;
+          this.tempUser.year_born = data.data.data.results.year_born;
+          this.tempUser.address = data.data.data.results.address;
+          this.tempUser.institute = data.data.data.results.institute.name;
+          this.tempUser.city = data.data.data.results.city.name;
+          this.tempUser.religion = data.data.data.results.religion.name;
+          this.tempUser.education = data.data.data.results.education.name;
+          this.tempUser.tribe = data.data.data.results.tribe.name;
+          this.tempUser.modules = data.data.data.results.modules;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     toggleEdit: function () {
       this.editToggled = !this.editToggled;
       if (!this.editToggled) {
@@ -181,10 +245,35 @@ export default {
     },
     showDelete(id) {
       this.deleteClicked = true;
-      console.log(this.tempModule);
       this.tempModule = this.modules.find((obj) => {
         return obj.id === id;
       });
+    },
+    getAllModules: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/module")
+        .then((data) => {
+          this.isLoading = false;
+          this.modules = data.data.data.results.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+              status: item.status,
+              order: item.order,
+              color_hex: item.color_hex,
+            };
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status == 401) {
+            router.push("/login");
+          }
+        });
     },
   },
 };

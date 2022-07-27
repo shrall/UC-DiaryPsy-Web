@@ -22,7 +22,7 @@
           <div class="flex items-center gap-2">
             <img
               id="user-photo"
-              :src="this.files_url + tempUser.photo_name"
+              :src="!tempUser.photo ? this.files_url + tempUser.photo_name : tempUser.photo_file"
               class="rounded-full w-24 h-24"
             />
             <div class="flex flex-col gap-1">
@@ -34,6 +34,7 @@
               <div class="text-caption">{{ tempUser.photo_name }}</div>
               <input
                 type="file"
+                ref="file"
                 name="photo"
                 id="photo"
                 class="hidden"

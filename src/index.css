@@ -20,6 +20,9 @@
 .admin-button-white {
   @apply flex items-center gap-1 bg-white p-2 cursor-pointer rounded-xl hover:text-gray-500 disabled:opacity-50 disabled:hover:text-black;
 }
+.admin-button-black {
+  @apply flex items-center gap-1 bg-black p-2 cursor-pointer rounded-xl text-white hover:text-gray-300 disabled:opacity-50 disabled:hover:text-white;
+}
 .admin-button-green {
   @apply flex items-center gap-1 bg-lime-600 p-2 cursor-pointer rounded-xl text-white hover:text-gray-300 disabled:opacity-50 disabled:hover:text-white;
 }
