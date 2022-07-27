@@ -178,6 +178,7 @@ import Sidebar from "../components/Sidebar.vue";
 </script>
 
 <script>
+import router from "../../../router/index";
 import draggable from "vuedraggable";
 import axios from "axios";
 let id = 1;
@@ -203,7 +204,6 @@ export default {
     };
   },
   created() {
-    console.log(localStorage['access_token'])
     this.getAllModules();
   },
   methods: {
@@ -226,7 +226,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/module/reorder", {
@@ -254,7 +254,7 @@ export default {
     getAllModules: function () {
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .get("/admin/module")
@@ -272,13 +272,16 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          if (err.response.status == 401) {
+            router.push("/login");
+          }
         });
     },
     createModule() {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/module", {
@@ -299,7 +302,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/module/" + this.tempModule.id, {
@@ -321,7 +324,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/module/" + this.tempModule.id, {
