@@ -127,8 +127,8 @@ export default {
           this.isLoading = false;
           this.users.value = data.data.data.results.map((item) => {
             return {
-              id: item.ID,
-              name: item.Nama,
+              id: item.id,
+              name: item.name,
               email: item.email,
             };
           });
