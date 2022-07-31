@@ -16,8 +16,12 @@
       <Sidebar activeNav="user" />
     </div>
     <div class="col-span-10 p-4">
-      <div class="admin-card mb-8 flex justify-between">
-        <div class="text-heading">{{ pageModel }}</div>
+      <div class="admin-card mb-8 flex justify-between gap-2">
+        <div class="text-heading mr-auto">{{ pageModel }}</div>
+        <div class="admin-button-black" @click="downloadFile()">
+          <span class="fa fa-fw fa-file-export"></span>
+          Export Data
+        </div>
         <router-link :to="{ name: 'UserCreate' }">
           <div class="admin-button-green">
             <span class="fa fa-fw fa-plus"></span>
@@ -44,6 +48,7 @@
 <script>
 import axios from "axios";
 import Sidebar from "../components/Sidebar.vue";
+import exportFromJSON from "export-from-json";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridVue } from "ag-grid-vue3";
@@ -55,8 +60,7 @@ export default {
   },
   setup() {
     const users = reactive({
-      value: [
-      ],
+      value: [],
     });
     const columnDefs = reactive({
       value: [
@@ -101,13 +105,21 @@ export default {
     return {
       pageModel: "User",
       isLoading: false,
+      exportData: [],
     };
   },
   methods: {
+    downloadFile() {
+      const data = this.exportData;
+      const fileName = "raw-data";
+      const exportType = exportFromJSON.types.csv;
+
+      if (data) exportFromJSON({ data, fileName, exportType });
+    },
     getAllUsers: function () {
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .get("/admin/user")
@@ -115,8 +127,8 @@ export default {
           this.isLoading = false;
           this.users.value = data.data.data.results.map((item) => {
             return {
-              id: item.id,
-              name: item.name,
+              id: item.ID,
+              name: item.Nama,
               email: item.email,
             };
           });
@@ -125,9 +137,25 @@ export default {
           console.log(err);
         });
     },
+    getExportData: function () {
+      const instance = axios.create({
+        baseURL: this.url,
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
+      });
+      instance
+        .get("/admin/user/export")
+        .then((data) => {
+          this.isLoading = false;
+          this.exportData = data.data.data.results;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   created() {
     this.getAllUsers();
+    this.getExportData();
   },
 };
 </script>
