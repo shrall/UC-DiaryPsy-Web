@@ -30,7 +30,7 @@
           <div class="admin-card">
             <div class="text-heading">Action</div>
             <div class="grid grid-cols-2 justify-center items-center gap-2">
-              <div class="admin-button-black col-span-2">
+              <div class="admin-button-black col-span-2" @click="exportPDF()">
                 <span class="fa fa-fw fa-file-export"></span>
                 Export PDF
               </div>
@@ -169,6 +169,21 @@ export default {
     this.getAllModules();
   },
   methods: {
+    exportPDF: function () {
+      var printWindow = window.open(
+        "http://uc-diarypsy.test/user/1",
+        "Print",
+        "left=200, top=200, width=950, height=500, toolbar=0, resizable=0"
+      );
+      printWindow.addEventListener(
+        "load",
+        function () {
+          printWindow.print();
+          printWindow.close();
+        },
+        true
+      );
+    },
     addModule: function (event) {
       const formData = new FormData();
       formData.append("module_id", event.target.value);
