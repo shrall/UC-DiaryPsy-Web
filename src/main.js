@@ -16,6 +16,6 @@ app.mixin({
     },
   },
 });
-app.config.globalProperties.url = "http://uc-diarypsy.test/api/";
-app.config.globalProperties.files_url = "http://uc-diarypsy.test/uploads/";
+app.config.globalProperties.url = "https://api.karakterbuahroh.com/api/";
+app.config.globalProperties.files_url = "https://api.karakterbuahroh.com/uploads/";
 app.mount("#app");
