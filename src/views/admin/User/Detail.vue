@@ -21,7 +21,7 @@
         <div class="col-span-3 flex flex-col gap-y-2">
           <div class="admin-card flex flex-col items-center">
             <img
-              :src="this.files_url + tempUser.photo"
+              :src="`https://api.karakterbuahroh.com/uploads/` + tempUser.photo"
               class="rounded-full w-36 h-36"
             />
             <div class="text-heading">{{ tempUser.name }}</div>
@@ -34,13 +34,13 @@
                 <span class="fa fa-fw fa-file-export"></span>
                 Export PDF
               </div>
-              <router-link
+              <!-- <router-link
                 :to="{ path: `/user/edit/${this.id}` }"
                 class="admin-button-blue col-span-2"
               >
                 <span class="fa fa-fw fa-edit"></span>
                 Edit
-              </router-link>
+              </router-link> -->
               <!-- <div class="admin-button-red">
                 <span class="fa fa-fw fa-trash"></span>
                 Hapus
