@@ -73,6 +73,11 @@
         </div>
       </router-link>
     </div>
+    <div class="text-heading">
+      <div @click="submitLogout" class="cursor-pointer">
+        <span class="fa fa-fw fa-arrow-right-from-bracket"></span> Logout
+      </div>
+    </div>
   </div>
 </template>
 
@@ -81,4 +86,16 @@ defineProps({
   activeNav: String,
   clickNav: { type: Function },
 });
+</script>
+<script>
+export default {
+  methods: {
+    submitLogout: function () {
+      localStorage["access_token"] = null;
+      localStorage["user_id"] = null;
+      localStorage["role_id"] = null;
+      this.$router.push("/login");
+    },
+  },
+};
 </script>
