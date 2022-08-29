@@ -18,4 +18,5 @@ app.mixin({
 });
 app.config.globalProperties.url = "https://api.karakterbuahroh.com/api/";
 app.config.globalProperties.files_url = "https://api.karakterbuahroh.com/uploads/";
+app.config.globalProperties.export_url = "https://api.karakterbuahroh.com/";
 app.mount("#app");

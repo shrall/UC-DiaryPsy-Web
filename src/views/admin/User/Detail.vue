@@ -171,7 +171,7 @@ export default {
   methods: {
     exportPDF: function () {
       var printWindow = window.open(
-        "http://uc-diarypsy.test/user/1",
+        this.export_url + "user/" + this.id,
         "Print",
         "left=200, top=200, width=950, height=500, toolbar=0, resizable=0"
       );
