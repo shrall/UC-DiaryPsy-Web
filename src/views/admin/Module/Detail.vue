@@ -74,13 +74,16 @@
                 class="list-group-item item-card"
                 :class="{ 'not-draggable': !enabled }"
               >
-                  <span
-                    class="fa fa-fw fa-circle"
-                    :class="
-                      element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
-                    "
-                  ></span>
-                <router-link :to="{ path: `/character/${element.id}` }" class="hover:text-blue-500">
+                <span
+                  class="fa fa-fw fa-circle"
+                  :class="
+                    element.status == 1 ? 'text-lime-600' : 'text-kasih-400'
+                  "
+                ></span>
+                <router-link
+                  :to="{ path: `/character/${element.id}` }"
+                  class="hover:text-blue-500"
+                >
                   {{ element.name }}
                 </router-link>
                 <div class="model-item-drag-handle p-1" v-if="!editToggled">
@@ -102,9 +105,7 @@
         <div class="col-span-8 admin-card">
           <div class="flex justify-between mb-4">
             <div class="text-heading">
-              {{
-                !tempCharacter.id ? "Tambah Karakter" : "Edit Karakter"
-              }}
+              {{ !tempCharacter.id ? "Tambah Karakter" : "Edit Karakter" }}
             </div>
           </div>
           <div class="flex flex-col gap-y-2">
@@ -131,6 +132,26 @@
                   <option value="1" selected>Aktif</option>
                   <option value="0">Tidak Aktif</option>
                 </select>
+              </div>
+              <div class="flex flex-col group">
+                <label for="verse_number" class="admin-input-label-kasih"
+                  >Ayat Alkitab</label
+                >
+                <input
+                  type="text"
+                  name="verse_number"
+                  class="admin-input-kasih"
+                  v-model="tempCharacter.verse_number"
+                />
+              </div>
+              <div class="flex flex-col group">
+                <label for="verse" class="admin-input-label-kasih">Isi Ayat Alkitab</label>
+                <input
+                  type="text"
+                  name="verse"
+                  class="admin-input-kasih"
+                  v-model="tempCharacter.verse"
+                />
               </div>
             </form>
             <div class="flex">
@@ -178,6 +199,8 @@ export default {
         id: null,
         name: null,
         status: null,
+        verse: null,
+        verse_number: null,
         order: null,
         module_id: null,
       },
@@ -208,7 +231,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/character/reorder", {
@@ -237,7 +260,7 @@ export default {
     getModuleDetail: function () {
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .get("/admin/module/" + this.id)
@@ -250,6 +273,8 @@ export default {
               name: item.name,
               status: item.status,
               order: item.order,
+              verse: item.verse,
+              verse_number: item.verse_number,
               module_id: item.module_id,
             };
           });
@@ -262,12 +287,14 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/character", {
           name: this.tempCharacter.name,
           status: this.tempCharacter.status,
+          verse: this.tempCharacter.verse,
+          verse_number: this.tempCharacter.verse_number,
           module_id: this.id,
         })
         .then((data) => {
@@ -283,13 +310,15 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/character/" + this.tempCharacter.id, {
           _method: "PATCH",
           name: this.tempCharacter.name,
           status: this.tempCharacter.status,
+          verse: this.tempCharacter.verse,
+          verse_number: this.tempCharacter.verse_number
         })
         .then((data) => {
           this.isLoading = false;
@@ -304,7 +333,7 @@ export default {
       this.isLoading = true;
       const instance = axios.create({
         baseURL: this.url,
-        headers: { Authorization: 'Bearer ' + localStorage['access_token'] },
+        headers: { Authorization: "Bearer " + localStorage["access_token"] },
       });
       instance
         .post("admin/character/" + this.tempCharacter.id, {
